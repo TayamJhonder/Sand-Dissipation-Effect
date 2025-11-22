@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Particle Sand Letter L</title>
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+        background: #0a0a0a;
+    }
+    canvas {
+        display: block;
+    }
+</style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<script>
+/* ---------------------------------------------------
+    PARTICLE SAND LETTER - 3000 PARTICLES
+--------------------------------------------------- */
+
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+
+let particles = [];
+const particleCount = 3000;
+let mouse = { x: undefined, y: undefined, radius: 80 };
+
+// TRACK MOUSE
+window.addEventListener("mousemove", e => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+});
+window.addEventListener("mouseleave", () => {
+    mouse.x = undefined;
+    mouse.y = undefined;
+});
+
+// CREATE OFFSCREEN CANVAS TO DRAW BIG LETTER L
+const textCanvas = document.createElement("canvas");
+const textCtx = textCanvas.getContext("2d");
+textCanvas.width = 800;
+textCanvas.height = 400;
+
+// draw letter L
+textCtx.fillStyle = "white";
+textCtx.font = "bold 350px Arial";
+textCtx.fillText("L", 100, 330);
+
+let textCoordinates = textCtx.getImageData(0, 0, 800, 400);
+
+// PARTICLE CLASS
+class Particle {
+    constructor(x, y) {
+        // Start position random
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+
+        // Home position (text position)
+        this.homeX = x;
+        this.homeY = y;
+
+        this.size = 1.8;
+        this.baseSpeed = 0.1;
+        this.density = Math.random() * 25 + 5;
+    }
+
+    draw() {
+        ctx.fillStyle = "#00c6ff";
+        ctx.fillRect(this.x, this.y, this.size, this.size);
+    }
+
+    update() {
+        // Distance to mouse
+        let dx = mouse.x - this.x;
+        let dy = mouse.y - this.y;
+        let dist = Math.sqrt(dx * dx + dy * dy);
+
+        // WHEN MOUSE NEAR → REPEL (SAND BREAK)
+        if (dist < mouse.radius) {
+            let angle = Math.atan2(dy, dx);
+            let force = -mouse.radius / dist;
+            let fx = Math.cos(angle) * force * this.density;
+            let fy = Math.sin(angle) * force * this.density;
+
+            this.x += fx;
+            this.y += fy;
+        } else {
+            // RETURN TO HOME POSITION (REFORM LETTER)
+            let toHomeX = this.homeX - this.x;
+            let toHomeY = this.homeY - this.y;
+
+            this.x += toHomeX * 0.05;
+            this.y += toHomeY * 0.05;
+        }
+    }
+}
+
+// GENERATE PARTICLES FROM LETTER L PIXELS
+function init() {
+    particles = [];
+
+    for (let y = 0; y < 400; y += 2) {
+        for (let x = 0; x < 800; x += 2) {
+            let index = (y * 800 + x) * 4;
+            if (textCoordinates.data[index + 3] > 128) {
+                let posX = x + canvas.width / 2 - 400;
+                let posY = y + canvas.height / 2 - 200;
+                particles.push(new Particle(posX, posY));
+
+                if (particles.length >= particleCount) return;
+            }
+        }
+    }
+}
+
+init();
+
+// ANIMATION LOOP
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (let p of particles) {
+        p.update();
+        p.draw();
+    }
+
+    requestAnimationFrame(animate);
+}
+animate();
+
+// RESIZE EVENT
+window.addEventListener("resize", () => {
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
+    init();
+});
+</script>
+
+</body>
+</html>
