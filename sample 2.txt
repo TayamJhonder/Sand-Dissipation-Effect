@@ -634,7 +634,633 @@ window.addEventListener("touchstart", e => {
     touchTimeout = setTimeout(() => {
         mouse.active = false;
         touchMode = false;
+        mouse.x = undefined;<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Jhonder Tayam | Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+/* BASIC THEME */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+:root {
+    --bg: #0a0a0a;
+    --text: #fff;
+    --accent: #00c6ff;
+    --accent2: #ff6b6b;
+    --card: #111;
+    --section-padding: 80px 70px;
+}
+.light {
+    --bg: #f3f3f3;
+    --text: #000;
+    --accent: #0077ff;
+    --accent2: #ff4757;
+    --card: #fff;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    transition: 0.25s;
+    overflow-x: hidden;
+}
+
+/* CANVAS BACKGROUND */
+#bgCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+}
+
+/* NAV */
+nav {
+    width: 100%;
+    padding: 20px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(12px);
+    position: fixed;
+    top: 0;
+    z-index: 999;
+    background: rgba(10, 10, 10, 0.8);
+}
+.light nav {
+    background: rgba(243, 243, 243, 0.8);
+}
+nav .logo {
+    font-size: 28px;
+    font-weight: 700;
+}
+nav .logo span {
+    color: var(--accent);
+}
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 25px;
+}
+nav ul li a {
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 500;
+    transition: 0.3s;
+}
+nav ul li a:hover {
+    color: var(--accent);
+}
+#themeToggle {
+    background: var(--accent);
+    border: none;
+    color: #000;
+    padding: 8px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+}
+#themeToggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 198, 255, 0.3);
+}
+
+/* SECTIONS */
+section {
+    padding: var(--section-padding);
+    min-height: auto;
+}
+h2 {
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 25px;
+    position: relative;
+}
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: var(--accent);
+    border-radius: 2px;
+}
+
+/* HERO */
+.hero {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 20px;
+    position: relative;
+}
+
+/* Text Animation Canvas */
+#nameCanvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 50%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* ABOUT */
+.about-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: center;
+    align-items: flex-start;
+}
+.info, .desc {
+    flex: 1;
+    min-width: 300px;
+}
+.info p,
+.desc p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+.info p strong {
+    color: var(--accent);
+}
+
+/* SKILLS */
+.skill-grid {
+    margin-top: 35px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 22px;
+}
+.card {
+    background: var(--card);
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid #222;
+    text-align: center;
+    transition: 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.card:hover {
+    transform: translateY(-6px);
+    border-color: var(--accent);
+    box-shadow: 0 8px 15px rgba(0, 198, 255, 0.2);
+}
+
+/* CONTACT */
+.contact-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+.social-links {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+.social-links a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: var(--card);
+    border-radius: 50%;
+    color: var(--text);
+    font-size: 20px;
+    transition: 0.3s;
+    text-decoration: none;
+    border: 1px solid #222;
+}
+.social-links a:hover {
+    background: var(--accent);
+    color: #000;
+    transform: translateY(-3px);
+}
+
+/* FOOTER */
+footer {
+    padding: 25px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.05);
+    margin-top: 40px;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+    nav ul { display: none; }
+    nav { padding: 15px 25px; }
+    section { padding: 80px 25px; }
+    :root { --section-padding: 80px 25px; }
+}
+@media(max-width:500px){
+    h2 { font-size: 28px; }
+    .about-content { flex-direction: column; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- PARTICLE BACKGROUND -->
+<canvas id="bgCanvas"></canvas>
+
+<!-- NAVIGATION -->
+<nav>
+    <div class="logo">JH<span>T</span></div>
+    <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button id="themeToggle">Light</button>
+</nav>
+
+<!-- HERO -->
+<section id="home" class="hero">
+    <canvas id="nameCanvas"></canvas>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+    <h2>About Me</h2>
+    <div class="about-content">
+        <div class="info">
+            <p><strong>Full Name:</strong> Jhonder Tayam</p>
+            <p><strong>Birthday:</strong> July 2, 2002</p>
+            <p><strong>Education:</strong> 2nd Year College (2025) Computer Communication Development Institute</p>
+            <p><strong>Status:</strong> Focused on career development</p>
+        </div>
+        <div class="desc">
+            <p>
+                I'm a tech enthusiast who loves programming, building websites,
+                developing systems, working with databases, and performing bug bounty.
+                My goal is to become a professional developer and ethical hacker while
+                continuously improving my capabilities.
+            </p>
+            <p>
+                I'm passionate about creating efficient solutions and learning new technologies
+                to stay at the forefront of the ever-evolving tech industry.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+    <h2>My Skills</h2>
+    <div class="skill-grid">
+        <div class="card">Web Development</div>
+        <div class="card">Programming</div>
+        <div class="card">Game Development</div>
+        <div class="card">App Development</div>
+        <div class="card">System Design</div>
+        <div class="card">Database Management</div>
+        <div class="card">Bug Bounty</div>
+        <div class="card">Problem Solving</div>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+    <h2>Contact</h2>
+    <div class="contact-content">
+        <p style="text-align:center;">Let's connect and create something amazing together!</p>
+        <div class="social-links">
+            <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+            <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" title="Email"><i class="fas fa-envelope"></i></a>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    © 2025 Jhonder Tayam | Personal Portfolio
+</footer>
+
+<script>
+/* -----------------------------------
+   THEME SWITCH
+----------------------------------- */
+document.getElementById("themeToggle").onclick = () => {
+    document.body.classList.toggle("light");
+    themeToggle.textContent =
+        document.body.classList.contains("light") ? "Dark" : "Light";
+};
+
+/* -----------------------------------
+   BACKGROUND PARTICLE ENGINE
+----------------------------------- */
+const bgCanvas = document.getElementById("bgCanvas");
+const bgCtx = bgCanvas.getContext("2d");
+
+bgCanvas.width = innerWidth;
+bgCanvas.height = innerHeight;
+
+const bgParticles = [];
+const bgCount = 110;
+
+// CURSOR POS
+let mouse = { x: null, y: null, active: false };
+let touchMode = false;
+let touchTimeout = null;
+
+class BgParticle {
+    constructor() { this.reset(); }
+
+    reset() {
+        this.x = Math.random() * bgCanvas.width;
+        this.y = Math.random() * bgCanvas.height;
+        this.baseX = this.x;
+        this.baseY = this.y;
+        this.size = Math.random() * 3 + 1;
+        this.speedX = Math.random() * 1 - 0.5;
+        this.speedY = Math.random() * 1 - 0.5;
+    }
+
+    draw() {
+        bgCtx.fillStyle = "rgba(0,200,255,0.9)";
+        bgCtx.beginPath();
+        bgCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        bgCtx.fill();
+    }
+
+    update() {
+        // Normal motion
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        if (this.x < 0 || this.x > bgCanvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > bgCanvas.height) this.speedY *= -1;
+
+        if (mouse.active) {
+            let dx = this.x - mouse.x;
+            let dy = this.y - mouse.y;
+            let dist = Math.sqrt(dx * dx + dy * dy);
+
+            // Orbit around cursor
+            if (dist < 120) {
+                let angle = Math.atan2(dy, dx);
+                this.x = mouse.x + Math.cos(angle) * 120;
+                this.y = mouse.y + Math.sin(angle) * 120;
+            }
+
+            // Strong repulsion when very close
+            if (dist < 50) {
+                this.x += dx * 0.2;
+                this.y += dy * 0.2;
+            }
+        }
+    }
+}
+
+// INIT BACKGROUND PARTICLES
+function initBgParticles() {
+    bgParticles.length = 0;
+    for (let i = 0; i < bgCount; i++) bgParticles.push(new BgParticle());
+}
+initBgParticles();
+
+// BACKGROUND ANIMATION LOOP
+function animateBg() {
+    bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+    bgParticles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animateBg);
+}
+animateBg();
+
+/* -----------------------------------
+   NAME PARTICLE ANIMATION
+----------------------------------- */
+const nameCanvas = document.getElementById("nameCanvas");
+const nameCtx = nameCanvas.getContext("2d");
+
+nameCanvas.width = innerWidth;
+nameCanvas.height = innerHeight;
+
+let nameParticles = [];
+const nameParticleCount = 5000;
+
+// CREATE OFFSCREEN CANVAS TO DRAW NAME
+const nameTextCanvas = document.createElement("canvas");
+const nameTextCtx = nameTextCanvas.getContext("2d");
+
+// Dynamically calculate font size based on screen width
+function calculateFontSize() {
+    const screenWidth = window.innerWidth;
+    if (screenWidth < 768) {
+        return "bold 50px Arial";
+    } else if (screenWidth < 1024) {
+        return "bold 80px Arial";
+    } else {
+        return "bold 120px Arial";
+    }
+}
+
+// Set canvas size based on screen
+function setCanvasSize() {
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    
+    nameTextCanvas.width = Math.min(screenWidth * 0.9, 1200);
+    nameTextCanvas.height = Math.min(screenHeight * 0.5, 500);
+}
+
+setCanvasSize();
+
+// Draw name "Jhonder Tayam" with proper positioning
+nameTextCtx.fillStyle = "white";
+nameTextCtx.font = calculateFontSize();
+nameTextCtx.textAlign = "center";
+nameTextCtx.textBaseline = "middle";
+nameTextCtx.fillText("Jhonder Tayam", nameTextCanvas.width/2, nameTextCanvas.height/2);
+
+let nameCoordinates = nameTextCtx.getImageData(0, 0, nameTextCanvas.width, nameTextCanvas.height);
+
+// NAME PARTICLE CLASS
+class NameParticle {
+    constructor(x, y) {
+        // Start position random
+        this.x = Math.random() * nameCanvas.width;
+        this.y = Math.random() * nameCanvas.height;
+
+        // Home position (text position)
+        this.homeX = x;
+        this.homeY = y;
+
+        this.size = 2;
+        this.baseSpeed = 0.1;
+        this.density = Math.random() * 25 + 5;
+        this.color = "#00c6ff"; // Blue color
+    }
+
+    draw() {
+        nameCtx.fillStyle = this.color;
+        nameCtx.fillRect(this.x, this.y, this.size, this.size);
+    }
+
+    update() {
+        // Distance to mouse
+        let dx = mouse.x - this.x;
+        let dy = mouse.y - this.y;
+        let dist = Math.sqrt(dx * dx + dy * dy);
+
+        // WHEN MOUSE NEAR → REPEL (SAND BREAK)
+        if (dist < 80) {
+            let angle = Math.atan2(dy, dx);
+            let force = -80 / dist;
+            let fx = Math.cos(angle) * force * this.density;
+            let fy = Math.sin(angle) * force * this.density;
+
+            this.x += fx;
+            this.y += fy;
+        } else {
+            // RETURN TO HOME POSITION (REFORM LETTER)
+            let toHomeX = this.homeX - this.x;
+            let toHomeY = this.homeY - this.y;
+
+            this.x += toHomeX * 0.05;
+            this.y += toHomeY * 0.05;
+        }
+    }
+}
+
+// GENERATE PARTICLES FROM NAME PIXELS
+function initNameParticles() {
+    nameParticles = [];
+
+    // Use a more efficient sampling to ensure complete text
+    for (let y = 0; y < nameTextCanvas.height; y += 2) {
+        for (let x = 0; x < nameTextCanvas.width; x += 2) {
+            let index = (y * nameTextCanvas.width + x) * 4;
+            if (nameCoordinates.data[index + 3] > 128) {
+                let posX = x + nameCanvas.width / 2 - nameTextCanvas.width / 2;
+                let posY = y + nameCanvas.height / 2 - nameTextCanvas.height / 2;
+                
+                // Only add if within visible canvas area
+                if (posX > 0 && posX < nameCanvas.width && posY > 0 && posY < nameCanvas.height) {
+                    nameParticles.push(new NameParticle(posX, posY));
+                }
+
+                if (nameParticles.length >= nameParticleCount) return;
+            }
+        }
+    }
+}
+
+initNameParticles();
+
+// NAME ANIMATION LOOP
+function animateName() {
+    nameCtx.clearRect(0, 0, nameCanvas.width, nameCanvas.height);
+
+    for (let p of nameParticles) {
+        p.update();
+        p.draw();
+    }
+
+    requestAnimationFrame(animateName);
+}
+animateName();
+
+/* -----------------------------------
+   EVENT LISTENERS
+----------------------------------- */
+
+// MOUSE (PC)
+window.addEventListener("mousemove", e => {
+    if (touchMode) return;
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+    mouse.active = true;
+});
+window.addEventListener("mouseleave", () => {
+    mouse.active = false;
+    mouse.x = undefined;
+    mouse.y = undefined;
+});
+
+// CLICK EXPLOSION
+window.addEventListener("click", e => {
+    for (let i = 0; i < 20; i++) {
+        let p = new BgParticle();
+        p.x = e.clientX;
+        p.y = e.clientY;
+        p.speedX = (Math.random() - 0.5) * 6;
+        p.speedY = (Math.random() - 0.5) * 6;
+        bgParticles.push(p);
+        setTimeout(() => bgParticles.pop(), 500);
+    }
+});
+
+// TOUCH (MOBILE)
+window.addEventListener("touchstart", e => {
+    touchMode = true;
+
+    let t = e.touches[0];
+    mouse.x = t.clientX;
+    mouse.y = t.clientY;
+    mouse.active = true;
+
+    clearTimeout(touchTimeout);
+    touchTimeout = setTimeout(() => {
+        mouse.active = false;
+        touchMode = false;
         mouse.x = undefined;
+        mouse.y = undefined;
+    }, 2000);
+});
+
+// RESIZE
+window.addEventListener("resize", () => {
+    bgCanvas.width = innerWidth;
+    bgCanvas.height = innerHeight;
+    nameCanvas.width = innerWidth;
+    nameCanvas.height = innerHeight;
+    
+    // Recalculate font size and canvas dimensions
+    setCanvasSize();
+    
+    // Redraw the name text
+    nameTextCtx.fillStyle = "white";
+    nameTextCtx.font = calculateFontSize();
+    nameTextCtx.textAlign = "center";
+    nameTextCtx.textBaseline = "middle";
+    nameTextCtx.clearRect(0, 0, nameTextCanvas.width, nameTextCanvas.height);
+    nameTextCtx.fillText("Jhonder Tayam", nameTextCanvas.width/2, nameTextCanvas.height/2);
+    
+    nameCoordinates = nameTextCtx.getImageData(0, 0, nameTextCanvas.width, nameTextCanvas.height);
+    
+    initBgParticles();
+    initNameParticles();
+});
+</script>
+
+</body>
+</html>
         mouse.y = undefined;
     }, 2000);
 });
